@@ -43,6 +43,16 @@
 	  motor_size="4" >
 	</xacro:ros_interface_macro>
 
+
+  <gazebo>
+    <plugin filename="libforce_plugin.so" name="force" >
+      <debug>1</debug>
+      <body_frame>1</body_frame>
+      <link_name>base_link</link_name>
+      <topic_name>/iris/ft</topic_name>
+    </plugin>
+  </gazebo>
+
 	<!--
   <xacro:if value="$(arg enable_wind)">
     <xacro:wind_plugin_macro

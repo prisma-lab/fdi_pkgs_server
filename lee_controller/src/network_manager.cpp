@@ -292,11 +292,12 @@ void NET_MANAGER::gen_fault() {
 
     bool gen = false;
 
-    sleep(2);
+    sleep(4);
     _faults.data[0] = 0.0;
     _faults.data[1] = 0.0;
     _faults.data[2] = 0.0;
     _faults.data[3] = 0.0;
+
     while( !gen && !_traj_done ) {
         int gdata = gen_fault_distr( gen_fault_generator );
         gen = ( gdata > _gen_th ); 
@@ -309,9 +310,9 @@ void NET_MANAGER::gen_fault() {
         int index_motor = motor_fault_distr( motor_fault_generator );
         cout << "Fault on motor: " << index_motor << endl;
         //Only on motor 0 right now
-        //float perc_damage = perc_distr( perc_generator );
+        float perc_damage = perc_distr( perc_generator );
         //index_motor = 0;
-        float perc_damage = _fault_perc;
+        //float perc_damage = _fault_perc;
 
         _faults.data[index_motor] = perc_damage;
         //_faults.data[1] = 0.0;
@@ -473,13 +474,16 @@ void NET_MANAGER::move_to( Vector4d wp, double cv ) {
     while( (_cp->getNext(x, xd, xdd)) && !interrupt  ) {
         
         _point_pub.publish( x.pose );
+        
         _fault_pub.publish( _faults );        
+        
+        /*
         if( !_test ) 
             ts_file << _ext_w.force.x << ", " << _ext_w.force.y << ", " <<  _ext_w.force.z << ", " << 
             _ext_w.torque.x << ", " << _ext_w.torque.y << ", " << _ext_w.torque.z << ", " << 
             ( _faults.data[0] > 0.0 ) << ", " << ( _faults.data[1] > 0.0 ) << ", " << 
             ( _faults.data[2] > 0.0 ) << ", " << ( _faults.data[3] > 0.0 ) << endl;
-
+        */
         if( _fault_on ) {
             if ( cnt++ > _cnt_th ) {
                 interrupt = true;
@@ -491,6 +495,7 @@ void NET_MANAGER::move_to( Vector4d wp, double cv ) {
                 cout << "Stall" << endl;
                 _fault_critical = true;
             }
+            
         }
 
         r.sleep();

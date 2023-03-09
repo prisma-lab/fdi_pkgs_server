@@ -616,7 +616,17 @@ void NET_MANAGER::net_loop() {
         _landed_state = true;
         std_msgs::Bool reset;
         reset.data = true;
+         _faults.data[0] = 0.0;
+        _faults.data[1] = 0.0;
+        _faults.data[2] = 0.0;
+        _faults.data[3] = 0.0;
+        ros::Rate r(100);
+       
         _reset_pub.publish( reset );
+        for(int i=0; i<100; i++) {
+            _fault_pub.publish( _faults );        
+            r.sleep();
+        }
         _fault_on = false;
         sleep(1);
     }

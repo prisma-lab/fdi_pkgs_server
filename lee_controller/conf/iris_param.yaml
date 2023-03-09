@@ -15,6 +15,8 @@ motor_moment_k: 1.6e-2
 rotor_angles: [-0.5337, 2.565, 0.5337, -2.565]
 arm_length:  [0.255, 0.238, 0.255, 0.238]
 motor_rotation_direction: [1, 1, -1, -1]
+write_on_file: true
+
 
 ref_jerk_max: 10.0
 ref_acc_max: 2.5
